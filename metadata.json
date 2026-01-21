@@ -1,0 +1,5 @@
+{
+  "name": "Sistem Keuangan Kelas",
+  "description": "Aplikasi manajemen keuangan kelas yang komprehensif, mendukung pencatatan siswa, transaksi SPP/Gedung, laporan visual, dan fitur ekspor data. Dapat diinstal sebagai PWA.",
+  "requestFramePermissions": []
+}

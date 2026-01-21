@@ -1,0 +1,522 @@
+@if (!isLoggedIn()) {
+  <div class="min-h-screen bg-slate-100 flex items-center justify-center p-4 font-sans bg-cover bg-center" style="background-image: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%)">
+    <div class="max-w-md w-full bg-white rounded-2xl shadow-2xl overflow-hidden animate-fade-in transform transition-all hover:scale-[1.01]">
+      <div class="bg-gradient-to-br from-emerald-600 to-emerald-800 p-8 text-center relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full bg-white/5 opacity-20"></div>
+        <div class="relative z-10">
+          <div class="mx-auto bg-white/20 w-20 h-20 rounded-full flex items-center justify-center backdrop-blur-sm mb-4 shadow-lg border-2 border-white/30">
+            <app-icon name="school" size="40" class="text-white drop-shadow-md" />
+          </div>
+          <h1 class="text-2xl font-bold text-white mb-1 tracking-wide">SMP ASY-SYARIFIY</h1>
+          <p class="text-emerald-100 text-sm font-medium tracking-wider uppercase opacity-90">Pengelolaan Keuangan Wali Kelas</p>
+        </div>
+      </div>
+      
+      <div class="p-8 pt-10">
+        <form (submit)="handleLogin($event)" class="space-y-6">
+          <div class="space-y-1">
+             <label class="block text-sm font-semibold text-slate-600 ml-1">Username</label>
+             <div class="relative group">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <app-icon name="user" size="18" class="text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
+                </div>
+                <input type="text" required class="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-xl text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all bg-slate-50 focus:bg-white shadow-sm" placeholder="Masukkan Username" />
+             </div>
+          </div>
+          <div class="space-y-1">
+             <label class="block text-sm font-semibold text-slate-600 ml-1">Password</label>
+             <div class="relative group">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <app-icon name="lock" size="18" class="text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
+                </div>
+                <input type="password" required class="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-xl text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all bg-slate-50 focus:bg-white shadow-sm" placeholder="Masukkan Password" />
+             </div>
+          </div>
+          <button type="submit" class="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-emerald-500/30 transform transition-all active:scale-[0.98] flex items-center justify-center gap-2 mt-4">
+            <app-icon name="log-in" size="20" />
+            Masuk Dashboard
+          </button>
+        </form>
+        <div class="mt-8 text-center">
+          <p class="text-xs text-slate-400">&copy; 2024 SMP Asy-Syarifiy. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="flex h-screen font-sans transition-colors duration-300" [class]="getBgClass() + ' ' + getTextClass() + ' ' + getTextSizeClass()">
+    <!-- Sidebar Desktop -->
+    <aside class="hidden md:flex flex-col w-64 text-white shadow-xl z-20" [class]="appSettings().darkMode ? 'bg-slate-800 border-r border-slate-700' : 'bg-slate-900'">
+      <div class="p-6 flex items-center gap-3 border-b" [class]="appSettings().darkMode ? 'border-slate-700' : 'border-slate-800'">
+        <div class="bg-emerald-500 p-2 rounded-lg">
+          <app-icon name="school" size="24" class="text-white" />
+        </div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight">SMP ASY-SYARIFIY</h1>
+          <p class="text-xs text-slate-400">Keuangan Walikelas</p>
+        </div>
+      </div>
+      
+      <nav class="flex-1 p-4 space-y-2">
+        <button (click)="activeTab.set('dashboard')" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all capitalize" [class]="activeTab() === 'dashboard' ? 'bg-emerald-600 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'">
+          <app-icon name="layout-dashboard" size="20" /> <span class="font-medium">{{ t()('menu_dashboard') }}</span>
+        </button>
+        <button (click)="activeTab.set('students')" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all capitalize" [class]="activeTab() === 'students' ? 'bg-emerald-600 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'">
+          <app-icon name="users" size="20" /> <span class="font-medium">{{ t()('menu_students') }}</span>
+        </button>
+        <button (click)="activeTab.set('transactions')" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all capitalize" [class]="activeTab() === 'transactions' ? 'bg-emerald-600 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'">
+          <app-icon name="wallet" size="20" /> <span class="font-medium">{{ t()('menu_transactions') }}</span>
+        </button>
+        <button (click)="activeTab.set('reports')" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all capitalize" [class]="activeTab() === 'reports' ? 'bg-emerald-600 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'">
+          <app-icon name="file-text" size="20" /> <span class="font-medium">{{ t()('menu_reports') }}</span>
+        </button>
+        <button (click)="activeTab.set('settings')" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all capitalize" [class]="activeTab() === 'settings' ? 'bg-emerald-600 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'">
+          <app-icon name="settings" size="20" /> <span class="font-medium">{{ t()('menu_settings') }}</span>
+        </button>
+      </nav>
+
+      <div class="p-4 border-t" [class]="appSettings().darkMode ? 'border-slate-700' : 'border-slate-800'">
+        <button (click)="handleLogout()" class="w-full flex items-center gap-3 px-4 py-2 text-slate-400 hover:text-rose-400 transition-colors">
+          <app-icon name="log-out" size="20" /> <span class="font-medium">{{ t()('menu_logout') }}</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Mobile Menu Overlay -->
+    @if (isMobileMenuOpen()) {
+      <div class="fixed inset-0 bg-black/50 z-40 md:hidden" (click)="isMobileMenuOpen.set(false)"></div>
+    }
+
+    <!-- Mobile Sidebar -->
+    <aside class="fixed top-0 left-0 bottom-0 w-64 bg-slate-900 text-white z-50 transform transition-transform duration-300 md:hidden" [class.translate-x-0]="isMobileMenuOpen()" [class.-translate-x-full]="!isMobileMenuOpen()">
+      <div class="p-6 flex justify-between items-center border-b border-slate-800">
+        <span class="font-bold text-lg">Menu</span>
+        <button (click)="isMobileMenuOpen.set(false)"><app-icon name="x" size="24" /></button>
+      </div>
+      <nav class="p-4 space-y-2">
+        <button (click)="activeTab.set('dashboard'); isMobileMenuOpen.set(false)" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg capitalize" [class]="activeTab() === 'dashboard' ? 'bg-emerald-600' : 'text-slate-400'">
+          <app-icon name="layout-dashboard" size="20" /> {{ t()('menu_dashboard') }}
+        </button>
+        <button (click)="activeTab.set('students'); isMobileMenuOpen.set(false)" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg capitalize" [class]="activeTab() === 'students' ? 'bg-emerald-600' : 'text-slate-400'">
+          <app-icon name="users" size="20" /> {{ t()('menu_students') }}
+        </button>
+        <button (click)="activeTab.set('transactions'); isMobileMenuOpen.set(false)" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg capitalize" [class]="activeTab() === 'transactions' ? 'bg-emerald-600' : 'text-slate-400'">
+          <app-icon name="wallet" size="20" /> {{ t()('menu_transactions') }}
+        </button>
+        <button (click)="activeTab.set('reports'); isMobileMenuOpen.set(false)" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg capitalize" [class]="activeTab() === 'reports' ? 'bg-emerald-600' : 'text-slate-400'">
+          <app-icon name="file-text" size="20" /> {{ t()('menu_reports') }}
+        </button>
+        <button (click)="activeTab.set('settings'); isMobileMenuOpen.set(false)" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg capitalize" [class]="activeTab() === 'settings' ? 'bg-emerald-600' : 'text-slate-400'">
+          <app-icon name="settings" size="20" /> {{ t()('menu_settings') }}
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col overflow-hidden">
+      <!-- Top Header -->
+      <header class="h-16 border-b flex items-center justify-between px-4 md:px-8 z-10 transition-colors" [class]="appSettings().darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'">
+        <div class="flex items-center gap-4">
+          <button (click)="isMobileMenuOpen.set(true)" class="md:hidden text-slate-500">
+            <app-icon name="menu" size="24" />
+          </button>
+          <h2 class="text-xl font-bold capitalize md:block hidden" [class]="appSettings().darkMode ? 'text-white' : 'text-slate-800'">
+            @switch (activeTab()) {
+              @case ('dashboard') { {{ t()('header_dashboard') }} }
+              @case ('students') { {{ t()('header_students') }} }
+              @case ('transactions') { {{ t()('header_transactions') }} }
+              @case ('reports') { {{ t()('header_reports') }} }
+              @case ('settings') { {{ t()('header_settings') }} }
+            }
+          </h2>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="text-right hidden sm:block">
+            <p class="text-sm font-bold" [class]="appSettings().darkMode ? 'text-slate-200' : 'text-slate-800'">{{ profile().name }}</p>
+            <p class="text-xs text-slate-500">{{ profile().role }}</p>
+          </div>
+          <div class="h-10 w-10 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-700 font-bold border-2 border-emerald-200">
+            {{ profile().avatarInitials }}
+          </div>
+        </div>
+      </header>
+
+      <!-- Views -->
+      <div class="flex-1 overflow-auto p-4 md:p-8">
+        @switch (activeTab()) {
+          @case ('dashboard') {
+            <div class="space-y-6">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card Income -->
+                <div class="p-6 rounded-xl shadow-sm border flex items-start justify-between transition-colors duration-200" [class]="getCardBgClass()">
+                  <div>
+                    <p class="text-sm font-medium mb-1" [class]="getSubTextClass()">{{ t()('card_income') }}</p>
+                    <h3 class="text-2xl font-bold" [class]="appSettings().darkMode ? 'text-white' : 'text-slate-800'">{{ formatRupiah(totalCollected()) }}</h3>
+                    <div class="flex items-center mt-2 text-xs font-medium text-emerald-500">
+                      <app-icon name="arrow-up-right" size="14" class="mr-1" />
+                      +12% {{ t()('trend_month') }}
+                    </div>
+                  </div>
+                  <div class="p-3 rounded-lg bg-emerald-500 text-white">
+                    <app-icon name="wallet" size="24" />
+                  </div>
+                </div>
+
+                <!-- Card Paid -->
+                <div class="p-6 rounded-xl shadow-sm border flex items-start justify-between transition-colors duration-200" [class]="getCardBgClass()">
+                  <div>
+                    <p class="text-sm font-medium mb-1" [class]="getSubTextClass()">{{ t()('card_paid') }}</p>
+                    <h3 class="text-2xl font-bold" [class]="appSettings().darkMode ? 'text-white' : 'text-slate-800'">
+                       {{ monthlyStats().paidCount }} / {{ students().length }} {{ t()('th_student') }}
+                    </h3>
+                    <div class="flex items-center mt-2 text-xs font-medium text-emerald-500">
+                      <app-icon name="arrow-up-right" size="14" class="mr-1" />
+                      {{ monthlyStats().percentage }}% {{ t()('trend_collected') }}
+                    </div>
+                  </div>
+                  <div class="p-3 rounded-lg bg-blue-500 text-white">
+                    <app-icon name="users" size="24" />
+                  </div>
+                </div>
+
+                <!-- Card New -->
+                <div class="p-6 rounded-xl shadow-sm border flex items-start justify-between transition-colors duration-200" [class]="getCardBgClass()">
+                  <div>
+                    <p class="text-sm font-medium mb-1" [class]="getSubTextClass()">{{ t()('card_new') }}</p>
+                    <h3 class="text-2xl font-bold" [class]="appSettings().darkMode ? 'text-white' : 'text-slate-800'">{{ totalTransactions() }}</h3>
+                    <div class="flex items-center mt-2 text-xs font-medium text-emerald-500">
+                      <app-icon name="arrow-up-right" size="14" class="mr-1" />
+                      {{ t()('trend_today') }}
+                    </div>
+                  </div>
+                  <div class="p-3 rounded-lg bg-violet-500 text-white">
+                    <app-icon name="file-text" size="24" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Recent Table -->
+              <div class="rounded-xl shadow-sm overflow-hidden" [class]="getCardBgClass()">
+                <div class="p-6 border-b flex justify-between items-center" [class]="appSettings().darkMode ? 'border-slate-700' : 'border-slate-100'">
+                   <h3 class="font-bold" [class]="appSettings().darkMode ? 'text-slate-100' : 'text-slate-800'">{{ t()('recent_title') }}</h3>
+                   <button (click)="activeTab.set('transactions')" class="text-sm text-blue-500 hover:text-blue-600 font-medium">{{ t()('btn_view_all') }}</button>
+                </div>
+                <div class="overflow-x-auto">
+                   <table class="w-full text-left text-sm" [class]="appSettings().darkMode ? 'text-slate-300' : 'text-slate-600'">
+                      <thead class="font-semibold uppercase text-xs" [class]="appSettings().darkMode ? 'bg-slate-700 text-slate-200' : 'bg-slate-50 text-slate-700'">
+                        <tr>
+                           <th class="px-6 py-4">{{ t()('th_student') }}</th>
+                           <th class="px-6 py-4">{{ t()('th_type') }}</th>
+                           <th class="px-6 py-4">{{ t()('th_date') }}</th>
+                           <th class="px-6 py-4">{{ t()('th_amount') }}</th>
+                           <th class="px-6 py-4">{{ t()('th_status') }}</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y" [class]="appSettings().darkMode ? 'divide-slate-700' : 'divide-slate-100'">
+                         @for (tx of transactions().slice(0, 5); track tx.id) {
+                            <tr [class]="appSettings().darkMode ? 'hover:bg-slate-700' : 'hover:bg-slate-50'">
+                               <td class="px-6 py-4 font-medium" [class]="appSettings().darkMode ? 'text-white' : 'text-slate-900'">{{ getStudentName(tx.studentId) }}</td>
+                               <td class="px-6 py-4">{{ tx.type }}</td>
+                               <td class="px-6 py-4">{{ tx.date }}</td>
+                               <td class="px-6 py-4 font-medium text-emerald-500">{{ formatRupiah(tx.amount) }}</td>
+                               <td class="px-6 py-4">
+                                  <span class="px-2.5 py-0.5 rounded-full text-xs font-medium" 
+                                    [class.bg-emerald-100]="tx.status === 'Lunas'" 
+                                    [class.text-emerald-700]="tx.status === 'Lunas'"
+                                    [class.bg-amber-100]="tx.status.includes('Cicilan')" 
+                                    [class.text-amber-700]="tx.status.includes('Cicilan')"
+                                  >{{ tx.status }}</span>
+                               </td>
+                            </tr>
+                         }
+                      </tbody>
+                   </table>
+                </div>
+              </div>
+            </div>
+          }
+          @case ('students') {
+            <div class="rounded-xl shadow-sm overflow-hidden" [class]="getCardBgClass()">
+              <div class="p-6 border-b flex flex-col sm:flex-row justify-between items-center gap-4" [class]="appSettings().darkMode ? 'border-slate-700' : 'border-slate-100'">
+                <h3 class="font-bold text-lg" [class]="appSettings().darkMode ? 'text-slate-100' : 'text-slate-800'">{{ t()('header_students') }}</h3>
+                <div class="flex gap-2 w-full sm:w-auto flex-wrap sm:flex-nowrap">
+                  <input type="file" #fileInput (change)="handleFileUpload($event)" accept=".csv,.txt" class="hidden" />
+                  <button (click)="openAddStudentModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors shadow-sm">
+                     <app-icon name="user-plus" size="16" /> {{ t()('btn_add_student') }}
+                  </button>
+                  <button (click)="handleImportClick()" class="px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 border" [class]="appSettings().darkMode ? 'bg-slate-700 hover:bg-slate-600 text-slate-200 border-slate-600' : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200'">
+                     <app-icon name="upload" size="16" /> {{ t()('btn_import') }}
+                  </button>
+                </div>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm" [class]="appSettings().darkMode ? 'text-slate-300' : 'text-slate-600'">
+                  <thead class="font-semibold uppercase text-xs" [class]="appSettings().darkMode ? 'bg-slate-700 text-slate-200' : 'bg-slate-50 text-slate-700'">
+                     <tr>
+                        <th class="px-6 py-4">{{ t()('th_nis') }}</th>
+                        <th class="px-6 py-4">{{ t()('th_name') }}</th>
+                        <th class="px-6 py-4">{{ t()('th_class') }}</th>
+                        <th class="px-6 py-4">{{ t()('th_status') }}</th>
+                        <th class="px-6 py-4 text-right">{{ t()('th_action') }}</th>
+                     </tr>
+                  </thead>
+                  <tbody class="divide-y" [class]="appSettings().darkMode ? 'divide-slate-700' : 'divide-slate-100'">
+                     @for (student of students(); track student.id) {
+                        <tr class="group" [class]="appSettings().darkMode ? 'hover:bg-slate-700' : 'hover:bg-slate-50'">
+                           <td class="px-6 py-4 font-mono opacity-70">{{ student.nis }}</td>
+                           <td class="px-6 py-4 font-medium" [class]="appSettings().darkMode ? 'text-white' : 'text-slate-900'">{{ student.name }}</td>
+                           <td class="px-6 py-4">{{ student.class }}</td>
+                           <td class="px-6 py-4">
+                              <span class="px-2.5 py-0.5 rounded-full text-xs font-medium"
+                                [class.bg-blue-100]="student.status === 'Aktif'" [class.text-blue-700]="student.status === 'Aktif'"
+                                [class.bg-slate-100]="student.status !== 'Aktif'" [class.text-slate-700]="student.status !== 'Aktif'"
+                              >{{ student.status }}</span>
+                           </td>
+                           <td class="px-6 py-4 text-right">
+                              <div class="flex gap-2 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+                                 <button (click)="openEditStudentModal(student)" class="p-1.5 text-amber-500 hover:bg-amber-50/10 rounded-md"><app-icon name="pencil" size="18" /></button>
+                                 <button (click)="handleDeleteStudent(student.id)" class="p-1.5 text-rose-500 hover:bg-rose-50/10 rounded-md"><app-icon name="trash-2" size="18" /></button>
+                              </div>
+                           </td>
+                        </tr>
+                     }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          }
+          @case ('transactions') {
+             <div class="space-y-6">
+                <div class="flex justify-between items-center">
+                   <h2 class="text-2xl font-bold" [class]="appSettings().darkMode ? 'text-white' : 'text-slate-800'">{{ t()('recent_title') }}</h2>
+                   <button (click)="showPaymentModal.set(true)" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 shadow-sm transition-all">
+                      <app-icon name="plus" size="20" /> {{ t()('btn_input') }}
+                   </button>
+                </div>
+                <div class="rounded-xl shadow-sm overflow-hidden" [class]="getCardBgClass()">
+                   <div class="p-4 border-b flex gap-4" [class]="appSettings().darkMode ? 'border-slate-700 bg-slate-800' : 'border-slate-200 bg-slate-50'">
+                      <span class="text-sm font-semibold" [class]="getSubTextClass()">{{ t()('filter_all') }}</span>
+                   </div>
+                   <div class="overflow-x-auto">
+                     <table class="w-full text-left text-sm" [class]="appSettings().darkMode ? 'text-slate-300' : 'text-slate-600'">
+                       <thead class="font-semibold uppercase text-xs" [class]="appSettings().darkMode ? 'bg-slate-700 text-slate-200' : 'bg-slate-50 text-slate-700'">
+                          <tr>
+                             <th class="px-6 py-4">{{ t()('th_id') }}</th>
+                             <th class="px-6 py-4">{{ t()('th_student') }}</th>
+                             <th class="px-6 py-4">{{ t()('th_type') }}</th>
+                             <th class="px-6 py-4">{{ t()('th_date') }}</th>
+                             <th class="px-6 py-4">{{ t()('th_amount') }}</th>
+                             <th class="px-6 py-4">{{ t()('th_status') }}</th>
+                          </tr>
+                       </thead>
+                       <tbody class="divide-y" [class]="appSettings().darkMode ? 'divide-slate-700' : 'divide-slate-100'">
+                          @for (tx of transactions(); track tx.id) {
+                            <tr [class]="appSettings().darkMode ? 'hover:bg-slate-700' : 'hover:bg-slate-50'">
+                               <td class="px-6 py-4 font-mono opacity-60">#{{ tx.id }}</td>
+                               <td class="px-6 py-4 font-medium" [class]="appSettings().darkMode ? 'text-white' : 'text-slate-900'">{{ getStudentName(tx.studentId) }}</td>
+                               <td class="px-6 py-4">{{ tx.type }} <span class="text-xs opacity-70 border px-1 rounded ml-1">{{ tx.month }}</span></td>
+                               <td class="px-6 py-4">{{ tx.date }}</td>
+                               <td class="px-6 py-4 font-bold text-emerald-500">{{ formatRupiah(tx.amount) }}</td>
+                               <td class="px-6 py-4">
+                                  <span class="px-2.5 py-0.5 rounded-full text-xs font-medium" 
+                                    [class.bg-emerald-100]="tx.status === 'Lunas'" 
+                                    [class.text-emerald-700]="tx.status === 'Lunas'"
+                                    [class.bg-amber-100]="tx.status.includes('Cicilan')" 
+                                    [class.text-amber-700]="tx.status.includes('Cicilan')"
+                                  >{{ tx.status }}</span>
+                               </td>
+                            </tr>
+                          }
+                       </tbody>
+                     </table>
+                   </div>
+                </div>
+             </div>
+          }
+          @case ('reports') {
+             <div class="space-y-6">
+                <div class="flex justify-between items-center">
+                   <h2 class="text-2xl font-bold" [class]="appSettings().darkMode ? 'text-white' : 'text-slate-800'">{{ t()('header_reports') }}</h2>
+                   <button (click)="handleExportData()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 shadow-sm transition-all">
+                      <app-icon name="download" size="20" /> {{ t()('btn_export') }}
+                   </button>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                   <div class="p-6 rounded-xl shadow-sm border" [class]="getCardBgClass()">
+                      <h3 class="font-bold text-lg mb-4 flex items-center gap-2" [class]="appSettings().darkMode ? 'text-white' : 'text-slate-800'">
+                         <app-icon name="file-text" size="20" class="text-emerald-500" /> {{ t()('summary_title') }}
+                      </h3>
+                      <div class="space-y-4">
+                         <div class="flex justify-between items-center p-3 rounded-lg" [class]="appSettings().darkMode ? 'bg-slate-700' : 'bg-slate-50'">
+                            <span [class]="getSubTextClass()">{{ t()('summary_spp') }}</span>
+                            <!-- Mock calculation for specific types -->
+                            <span class="font-bold" [class]="getTextClass()">{{ formatRupiah(transactions().length * 100000) }}</span> 
+                         </div>
+                         <div class="flex justify-between items-center p-3 rounded-lg border mt-4" [class]="appSettings().darkMode ? 'bg-slate-700/50 border-emerald-900/30' : 'bg-emerald-50 border-emerald-100'">
+                             <span class="text-emerald-600 font-medium">{{ t()('summary_total') }}</span>
+                             <span class="font-bold text-emerald-600 text-lg">{{ formatRupiah(totalCollected()) }}</span>
+                         </div>
+                      </div>
+                   </div>
+
+                   <!-- Charts -->
+                   <div class="p-6 rounded-xl shadow-sm border flex flex-col justify-center" [class]="getCardBgClass()">
+                      <h3 class="font-bold text-lg mb-6 flex items-center gap-2" [class]="appSettings().darkMode ? 'text-white' : 'text-slate-800'">
+                         <app-icon name="pie-chart" size="20" class="text-blue-500" /> {{ t()('dist_title') }}
+                      </h3>
+                      <div class="flex flex-col sm:flex-row items-center justify-center gap-8">
+                         <div class="relative w-48 h-48 rounded-full shadow-inner" [style.background]="chartData().gradient">
+                            <div class="absolute inset-0 m-auto w-32 h-32 rounded-full flex items-center justify-center shadow-sm" [class]="appSettings().darkMode ? 'bg-slate-800' : 'bg-white'">
+                               <div class="text-center">
+                                  <span class="block text-xs font-medium uppercase tracking-wider" [class]="appSettings().darkMode ? 'text-slate-500' : 'text-slate-400'">{{ t()('chart_total') }}</span>
+                                  <span class="block text-sm font-bold" [class]="appSettings().darkMode ? 'text-white' : 'text-slate-800'">{{ transactions().length }} Tx</span>
+                               </div>
+                            </div>
+                         </div>
+                         <div class="flex-1 w-full sm:w-auto space-y-3">
+                            @for (item of chartData().data; track item.label) {
+                               <div class="flex items-center justify-between text-sm">
+                                  <div class="flex items-center gap-2">
+                                     <div class="w-3 h-3 rounded-full" [style.backgroundColor]="item.color"></div>
+                                     <span [class]="appSettings().darkMode ? 'text-slate-300' : 'text-slate-600'">{{ item.label }}</span>
+                                  </div>
+                                  <span class="font-bold" [class]="appSettings().darkMode ? 'text-slate-200' : 'text-slate-700'">{{ formatRupiah(item.value) }}</span>
+                               </div>
+                            }
+                         </div>
+                      </div>
+                   </div>
+                </div>
+             </div>
+          }
+          @case ('settings') {
+             <div class="max-w-4xl mx-auto space-y-8 pb-10">
+                <h2 class="text-2xl font-bold" [class]="getTextClass()">{{ t()('header_settings') }}</h2>
+                
+                <!-- Profile -->
+                <div class="p-6 rounded-xl shadow-sm" [class]="getCardBgClass()">
+                   <h3 class="text-lg font-bold mb-4 flex items-center gap-2 border-b pb-2" [class]="(appSettings().darkMode ? 'border-slate-700 text-white' : 'border-slate-100 text-slate-800')">
+                      <app-icon name="user" size="20" class="text-emerald-500" /> {{ t()('sect_profile') }}
+                   </h3>
+                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                         <label class="block text-sm font-medium mb-1" [class]="getSubTextClass()">{{ t()('label_name') }}</label>
+                         <input type="text" [value]="profile().name" (input)="updateProfile($any($event.target).value, profile().role)" class="w-full px-4 py-2 rounded-lg border outline-none focus:ring-2" [class]="appSettings().darkMode ? 'bg-slate-900 border-slate-700 text-white focus:ring-emerald-500' : 'bg-white border-slate-200 focus:ring-emerald-500'" />
+                      </div>
+                      <div>
+                         <label class="block text-sm font-medium mb-1" [class]="getSubTextClass()">{{ t()('label_role') }}</label>
+                         <input type="text" [value]="profile().role" (input)="updateProfile(profile().name, $any($event.target).value)" class="w-full px-4 py-2 rounded-lg border outline-none focus:ring-2" [class]="appSettings().darkMode ? 'bg-slate-900 border-slate-700 text-white focus:ring-emerald-500' : 'bg-white border-slate-200 focus:ring-emerald-500'" />
+                      </div>
+                   </div>
+                </div>
+
+                <!-- Appearance -->
+                <div class="p-6 rounded-xl shadow-sm" [class]="getCardBgClass()">
+                   <h3 class="text-lg font-bold mb-4 flex items-center gap-2 border-b pb-2" [class]="(appSettings().darkMode ? 'border-slate-700 text-white' : 'border-slate-100 text-slate-800')">
+                      <app-icon name="monitor" size="20" class="text-emerald-500" /> {{ t()('sect_display') }}
+                   </h3>
+                   <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <!-- Theme -->
+                      <div>
+                         <label class="block text-sm font-medium mb-3" [class]="getSubTextClass()">{{ t()('label_theme') }}</label>
+                         <div class="flex p-1 rounded-xl border" [class]="appSettings().darkMode ? 'bg-slate-900 border-slate-700' : 'bg-slate-100 border-slate-200'">
+                            <button (click)="updateSettings('darkMode', false)" class="flex-1 py-2 px-4 rounded-lg flex items-center justify-center gap-2 text-sm font-medium transition-all" [class]="!appSettings().darkMode ? 'bg-white text-emerald-700 shadow-sm' : 'text-slate-500 hover:text-slate-300'">
+                               <app-icon name="sun" size="18" /> {{ t()('theme_light') }}
+                            </button>
+                            <button (click)="updateSettings('darkMode', true)" class="flex-1 py-2 px-4 rounded-lg flex items-center justify-center gap-2 text-sm font-medium transition-all" [class]="appSettings().darkMode ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-500 hover:text-slate-700'">
+                               <app-icon name="moon" size="18" /> {{ t()('theme_dark') }}
+                            </button>
+                         </div>
+                      </div>
+                      <!-- Lang -->
+                      <div>
+                         <label class="block text-sm font-medium mb-3" [class]="getSubTextClass()">{{ t()('label_lang') }}</label>
+                         <div class="flex gap-4">
+                            <button (click)="updateSettings('language', 'id')" class="flex items-center gap-2 px-4 py-2 rounded-lg border" [class]="appSettings().language === 'id' ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-200 text-slate-500'">
+                               🇮🇩 Indonesia @if(appSettings().language === 'id') { <app-icon name="check-circle" size="16" /> }
+                            </button>
+                            <button (click)="updateSettings('language', 'en')" class="flex items-center gap-2 px-4 py-2 rounded-lg border" [class]="appSettings().language === 'en' ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-200 text-slate-500'">
+                               🇬🇧 English @if(appSettings().language === 'en') { <app-icon name="check-circle" size="16" /> }
+                            </button>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+             </div>
+          }
+        }
+      </div>
+    </main>
+
+    <!-- Modal Payment -->
+    @if (showPaymentModal()) {
+      <div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+         <div class="rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-fade-in" [class]="getCardBgClass()">
+            <div class="px-6 py-4 border-b flex justify-between items-center" [class]="appSettings().darkMode ? 'bg-slate-700 border-slate-600' : 'bg-slate-50 border-slate-100'">
+               <h3 class="font-bold text-lg" [class]="getTextClass()">{{ t()('modal_add_payment') }}</h3>
+               <button (click)="showPaymentModal.set(false)" class="text-slate-400 hover:text-slate-500"><app-icon name="x" size="20" /></button>
+            </div>
+            <form (submit)="handleAddPayment($event)" class="p-6 space-y-4">
+               <div>
+                  <label class="block text-sm font-medium mb-1" [class]="getSubTextClass()">{{ t()('label_select_student') }}</label>
+                  <select required [(ngModel)]="paymentForm().studentId" name="studentId" class="w-full px-4 py-2 rounded-lg border outline-none focus:ring-2 focus:ring-emerald-500" [class]="appSettings().darkMode ? 'bg-slate-900 border-slate-600 text-white' : 'bg-white border-slate-200'">
+                     <option value="">{{ t()('label_select_student') }}</option>
+                     @for(s of students(); track s.id) { <option [value]="s.id">{{ s.name }} ({{ s.nis }})</option> }
+                  </select>
+               </div>
+               <div class="grid grid-cols-2 gap-4">
+                  <div>
+                     <label class="block text-sm font-medium mb-1" [class]="getSubTextClass()">{{ t()('th_type') }}</label>
+                     <select [(ngModel)]="paymentForm().type" name="type" class="w-full px-4 py-2 rounded-lg border outline-none focus:ring-2 focus:ring-emerald-500" [class]="appSettings().darkMode ? 'bg-slate-900 border-slate-600 text-white' : 'bg-white border-slate-200'">
+                        @for(type of PAYMENT_TYPES; track type) { <option [value]="type">{{ type }}</option> }
+                     </select>
+                  </div>
+                  <div>
+                     <label class="block text-sm font-medium mb-1" [class]="getSubTextClass()">{{ t()('th_amount') }}</label>
+                     <input type="number" required [(ngModel)]="paymentForm().amount" name="amount" class="w-full px-4 py-2 rounded-lg border outline-none focus:ring-2 focus:ring-emerald-500" [class]="appSettings().darkMode ? 'bg-slate-900 border-slate-600 text-white' : 'bg-white border-slate-200'" />
+                  </div>
+               </div>
+               <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg transition-all">{{ t()('btn_save_payment') }}</button>
+            </form>
+         </div>
+      </div>
+    }
+
+    <!-- Modal Student -->
+    @if (showStudentModal()) {
+       <div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div class="rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-fade-in" [class]="getCardBgClass()">
+             <div class="px-6 py-4 border-b flex justify-between items-center" [class]="appSettings().darkMode ? 'bg-slate-700 border-slate-600' : 'bg-slate-50 border-slate-100'">
+                <h3 class="font-bold text-lg" [class]="getTextClass()">{{ isEditingStudent() ? t()('modal_edit_student') : t()('modal_add_student') }}</h3>
+                <button (click)="showStudentModal.set(false)" class="text-slate-400 hover:text-slate-500"><app-icon name="x" size="20" /></button>
+             </div>
+             <form (submit)="handleSaveStudent($event)" class="p-6 space-y-4">
+                <div>
+                   <label class="block text-sm font-medium mb-1" [class]="getSubTextClass()">{{ t()('th_nis') }}</label>
+                   <input type="text" required [(ngModel)]="studentForm().nis" name="nis" class="w-full px-4 py-2 rounded-lg border outline-none focus:ring-2 focus:ring-emerald-500" [class]="appSettings().darkMode ? 'bg-slate-900 border-slate-600 text-white' : 'bg-white border-slate-200'" />
+                </div>
+                <div>
+                   <label class="block text-sm font-medium mb-1" [class]="getSubTextClass()">{{ t()('th_name') }}</label>
+                   <input type="text" required [(ngModel)]="studentForm().name" name="name" class="w-full px-4 py-2 rounded-lg border outline-none focus:ring-2 focus:ring-emerald-500" [class]="appSettings().darkMode ? 'bg-slate-900 border-slate-600 text-white' : 'bg-white border-slate-200'" />
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                   <div>
+                      <label class="block text-sm font-medium mb-1" [class]="getSubTextClass()">{{ t()('th_class') }}</label>
+                      <input type="text" [(ngModel)]="studentForm().class" name="class" class="w-full px-4 py-2 rounded-lg border outline-none focus:ring-2 focus:ring-emerald-500" [class]="appSettings().darkMode ? 'bg-slate-900 border-slate-600 text-white' : 'bg-white border-slate-200'" />
+                   </div>
+                   <div>
+                      <label class="block text-sm font-medium mb-1" [class]="getSubTextClass()">{{ t()('th_status') }}</label>
+                      <select [(ngModel)]="studentForm().status" name="status" class="w-full px-4 py-2 rounded-lg border outline-none focus:ring-2 focus:ring-emerald-500" [class]="appSettings().darkMode ? 'bg-slate-900 border-slate-600 text-white' : 'bg-white border-slate-200'">
+                         <option value="Aktif">Aktif</option>
+                         <option value="Non-Aktif">Non-Aktif</option>
+                         <option value="Pindah">Pindah</option>
+                      </select>
+                   </div>
+                </div>
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg transition-all">{{ isEditingStudent() ? t()('btn_save_changes') : t()('btn_add_student_submit') }}</button>
+             </form>
+          </div>
+       </div>
+    }
+  </div>
+}
